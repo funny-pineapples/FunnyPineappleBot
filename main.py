@@ -1,13 +1,12 @@
 import optparse
 
 from aiogram import executor, types as t, Dispatcher
-from shared.instances import dp, bot
 import logging
 from shared import config
 
 logging.basicConfig(level=logging.INFO)
 
-parser = optparse.OptionParser(conflict_handler="resolve")
+parser = optparse.OptionParser(conflict_handler="resolve")  # Делает прикол с аргументами
 parser.add_option('-t', '--test',
                   action="store_true",
                   dest='test',
@@ -16,7 +15,7 @@ parser.add_option('-m', '--main',
                   action="store_true",
                   dest='main',
                   help='main token')
-values, args = parser.parse_args()
+values, args = parser.parse_args()  # Либа хуйня
 
 if values.test:
     config.token = config.test_token
@@ -29,12 +28,14 @@ else:
 async def on_start(dp: Dispatcher):
     from shared.commands import commands
     for scope, cmd in commands.items():
-        await bot.set_my_commands(cmd, scope)
+        await dp.bot.delete_my_commands(scope)
+        await dp.bot.set_my_commands(cmd, scope)
 
 
 if __name__ == '__main__':
+    from shared.instances import dp
     import handlers
 
     executor.start_polling(
-        dp, allowed_updates=t.AllowedUpdates.all(), on_startup=on_start
+        dp, allowed_updates=t.AllowedUpdates.all(), on_startup=on_start, skip_updates=True
     )
