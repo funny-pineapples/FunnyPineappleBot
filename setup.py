@@ -131,8 +131,8 @@ def systemd_unit_generator():
 
             print("Link unit from /etc/systemd/system/ ?")
             if _yes():
-                _cmd("sudo mv ToolKit.service /etc/systemd/system/")
-                _cmd("sudo ln /etc/systemd/system/ToolKit.service ./ -s")
+                _cmd("sudo mv FunnyPineappleBot.service /etc/systemd/system/")
+                _cmd("sudo ln /etc/systemd/system/FunnyPineappleBot.service ./ -s")
             break
         else:
             _clear()
