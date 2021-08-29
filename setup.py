@@ -96,6 +96,16 @@ def _enter():
     input("Press enter, to continue ...")
 
 
+def create_samples_txt():
+    if not os.path.isfile("samples.txt"):
+        with open("samples.txt", "w"):
+            print("File created")
+    else:
+        print("File exists")
+    _enter()
+    return True
+
+
 def systemd_unit_generator():
     while True:
         username = _input("Your username", os.environ["USER"])
@@ -188,6 +198,7 @@ def install_dependencies():
 
 if __name__ == '__main__':
     opts = {
+        "Create samples.txt file": create_samples_txt,
         "Setup systemd unit": systemd_unit_generator,
         "Setup config.py": config_generator,
         "Install or Update dependencies": install_dependencies,
