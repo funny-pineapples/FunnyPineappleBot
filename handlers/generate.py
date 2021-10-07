@@ -69,7 +69,7 @@ async def время_вышло(poll: t.Poll):
         win = max(yes, delete)
 
         try:
-            msg: t.Message = poll_ids[poll.id]
+            msg: t.Message = poll_ids.pop(poll.id)
         except KeyError:
             return
 
