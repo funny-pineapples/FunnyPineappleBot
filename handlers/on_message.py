@@ -8,7 +8,7 @@ async def сосалка(msg: t.Message):
     if text.startswith('/'):
         return False
     with open('samples.txt', 'a+') as file:
-        file.write(text.replace('§', '').lower() + '§')
+        file.write(text.replace('§', '') + '§')
     return False
 
 
