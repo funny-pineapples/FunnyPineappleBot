@@ -3,7 +3,6 @@ from os import system as run
 from aiogram import types as t
 from aiogram.dispatcher import filters
 
-from handlers.gen import получить_говно
 from shared.instances import dp
 
 
@@ -12,6 +11,8 @@ from shared.instances import dp
     content_types=[t.ContentType.PHOTO, t.ContentType.DOCUMENT],
 )
 async def высрать_гифку_по_фото(msg: t.Message):
+    from handlers.gen import получить_говно
+    
     if await скачать_и_обработать_файл(msg):
         with open("tmp/gif.mp4", "rb") as file:
             await msg.reply_animation(file, caption=получить_говно())
@@ -22,6 +23,8 @@ async def высрать_гифку_по_фото(msg: t.Message):
     content_types=[t.ContentType.TEXT],
 )
 async def высрать_гифку_по_ответу(msg: t.Message):
+    from handlers.gen import получить_говно
+
     if await скачать_и_обработать_файл(msg):
         with open("tmp/gif.mp4", "rb") as file:
             await msg.reply_animation(file, caption=получить_говно())
