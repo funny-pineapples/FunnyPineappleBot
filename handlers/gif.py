@@ -9,10 +9,25 @@ from shared.instances import dp
 
 @dp.message_handler(
     filters.Command("gif", ignore_caption=False),
-    content_types=[t.ContentType.PHOTO, t.ContentType.DOCUMENT, t.ContentType.TEXT],
-    commands=["gif"]
+    content_types=[t.ContentType.PHOTO, t.ContentType.DOCUMENT],
 )
-async def высрать_гиф(msg: t.Message):
+async def высрать_гифку_по_фото(msg: t.Message):
+    await скачать_файл(msg)
+    with open("tmp/gif.mp4", "rb") as file:
+        await msg.reply_animation(file, caption=получить_говно())
+
+
+@dp.message_handler(
+    commands=["gif"],
+    content_types=[t.ContentType.TEXT],
+)
+async def высрать_гифку_по_ответу(msg: t.Message):
+    await скачать_файл(msg)
+    with open("tmp/gif.mp4", "rb") as file:
+        await msg.reply_animation(file, caption=получить_говно())
+
+
+async def скачать_файл(msg: t.Message):
     tmp = "tmp/"
     inp = tmp + "gif.jpg"
     out = tmp + "gif.mp4"
@@ -36,6 +51,3 @@ async def высрать_гиф(msg: t.Message):
         return
 
     run(f"ffmpeg -loglevel quiet -y -i {inp} {out}")
-
-    with open(out, "rb") as file:
-        await msg.reply_animation(file, caption=получить_говно())
