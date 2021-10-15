@@ -50,4 +50,4 @@ async def скачать_и_обработать_файл(msg: t.Message):
         await msg.reply("Чел, ответь на фото или пришли мне его")
         return
 
-    run(f"ffmpeg -loglevel quiet -y -i {inp} {out}")
+    run(f"ffmpeg -y -i {inp} {out}")
