@@ -12,7 +12,7 @@ from shared.instances import dp
     content_types=[t.ContentType.PHOTO, t.ContentType.DOCUMENT],
 )
 async def высрать_гифку_по_фото(msg: t.Message):
-    await скачать_файл(msg)
+    await скачать_и_обработать_файл(msg)
     with open("tmp/gif.mp4", "rb") as file:
         await msg.reply_animation(file, caption=получить_говно())
 
@@ -22,12 +22,12 @@ async def высрать_гифку_по_фото(msg: t.Message):
     content_types=[t.ContentType.TEXT],
 )
 async def высрать_гифку_по_ответу(msg: t.Message):
-    await скачать_файл(msg)
+    await скачать_и_обработать_файл(msg)
     with open("tmp/gif.mp4", "rb") as file:
         await msg.reply_animation(file, caption=получить_говно())
 
 
-async def скачать_файл(msg: t.Message):
+async def скачать_и_обработать_файл(msg: t.Message):
     tmp = "tmp/"
     inp = tmp + "gif.jpg"
     out = tmp + "gif.mp4"
