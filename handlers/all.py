@@ -1,3 +1,6 @@
+import logging
+import traceback
+
 from shared.instances import dp
 from aiogram import types as t
 
@@ -13,4 +16,7 @@ async def errors_handler(upd: t.Update, err: Exception):
         await upd.callback_query.answer(txt)
     else:
         return
+
+    logging.error(traceback.format_exc())
+
     return True
