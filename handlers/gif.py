@@ -12,9 +12,9 @@ from shared.instances import dp
     content_types=[t.ContentType.PHOTO, t.ContentType.DOCUMENT],
 )
 async def высрать_гифку_по_фото(msg: t.Message):
-    await скачать_и_обработать_файл(msg)
-    with open("tmp/gif.mp4", "rb") as file:
-        await msg.reply_animation(file, caption=получить_говно())
+    if await скачать_и_обработать_файл(msg):
+        with open("tmp/gif.mp4", "rb") as file:
+            await msg.reply_animation(file, caption=получить_говно())
 
 
 @dp.message_handler(
@@ -22,9 +22,9 @@ async def высрать_гифку_по_фото(msg: t.Message):
     content_types=[t.ContentType.TEXT],
 )
 async def высрать_гифку_по_ответу(msg: t.Message):
-    await скачать_и_обработать_файл(msg)
-    with open("tmp/gif.mp4", "rb") as file:
-        await msg.reply_animation(file, caption=получить_говно())
+    if await скачать_и_обработать_файл(msg):
+        with open("tmp/gif.mp4", "rb") as file:
+            await msg.reply_animation(file, caption=получить_говно())
 
 
 async def скачать_и_обработать_файл(msg: t.Message):
@@ -48,6 +48,7 @@ async def скачать_и_обработать_файл(msg: t.Message):
             raise RuntimeError()
     except Exception:
         await msg.reply("Чел, ответь на фото или пришли мне его")
-        return
+        return False
 
-    run(f"ffmpeg -y -i {inp} {out}")
+    run(f"ffmpeg -loglevel quiet -y -i {inp} {out}")
+    return True
