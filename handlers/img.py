@@ -27,7 +27,7 @@ async def скачать(name: str) -> str:
     await bot.download_file_by_id(file_id, destination=f"tmp/{name}.jpg")
     return name
 
-
+    
 def удалить(name: str):
     run(f"rm -rf tmp/*{name}*")
 
