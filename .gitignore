@@ -133,6 +133,5 @@ dmypy.json
 .vscode
 
 FunnyPineappleBot.service
-config.py
-samples.txt
 tmp/*
+data/*
