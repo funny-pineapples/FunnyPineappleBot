@@ -41,7 +41,7 @@ async def пропустить(clb: t.CallbackQuery):
 
     await clb.message.delete()
     await clb.message.answer(
-        f'Добро пожаловать <a href="tg://user?id={int(clb.data.split("@")[1])}">ананасер</a> (<a href="tg://user?id={clb.from_user.id}">принят</a>)',
+        f'<a href="tg://user?id={int(clb.data.split("@")[1])}">Ананасер</a> добро пожаловать в чат для <a href="tg://user?id={clb.from_user.id}">крутых</a>'
         parse_mode=t.ParseMode.HTML,
     )
 
