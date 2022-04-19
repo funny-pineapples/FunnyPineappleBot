@@ -1,12 +1,13 @@
 import logging
 import traceback
 
-from shared.instances import dp
 from aiogram import types as t
+
+from shared.instances import dp
 
 
 @dp.errors_handler()
-async def errors_handler(upd: t.Update, err: Exception):
+async def уборщик_какашек(upd: t.Update, err: Exception):
     txt = "Я хз что произошло, но да \n"
     txt += f"   {err.__class__.__name__}: {' '.join(map(str, err.args))}"
 

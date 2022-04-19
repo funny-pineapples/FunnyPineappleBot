@@ -1,0 +1,6 @@
+{
+  "cSpell.words": ["aiogram", "unban", "unmute"],
+  "python.linting.enabled": false,
+  "python.formatting.provider": "black",
+  "python.sortImports.path": "isort"
+}

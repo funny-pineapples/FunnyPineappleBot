@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta
 
-from shared.instances import dp, bot
-from utils import filters as f
 from aiogram import types as t
 
+from shared.instances import bot, dp
+from utils import filters as f
+
 pin_reply_markup = t.InlineKeyboardMarkup().add(
-    t.InlineKeyboardButton("Проверить сейчас", callback_data="chek")
+    t.InlineKeyboardButton("Проверить сейчас", callback_data="check_pin_poll")
 )
 
 
@@ -15,25 +16,23 @@ async def закрепить_хуету(msg: t.Message):
     if msg.reply_to_message:
         await msg.reply_to_message.reply_poll(
             "Закрепить ?",
-            [
-                "Да",
-                "УДАЛИ НАХУЙ",
-                "Нет"
-            ],
+            ["Да", "УДАЛИ НАХУЙ", "Нет"],
             close_date=datetime.now() + timedelta(minutes=10),
-            reply_markup=pin_reply_markup
+            reply_markup=pin_reply_markup,
         )
     else:
         await msg.answer("Ты умник, ответь на сообщение")
 
 
-@dp.callback_query_handler(f.message.is_chat, lambda clb: clb.data == "chek")
-async def проверить_опрос(clb: t.CallbackQuery):
+@dp.callback_query_handler(f.message.is_chat, lambda clb: clb.data == "check_pin_poll")
+async def проверить_закреп(clb: t.CallbackQuery):
     poll = clb.message.poll
     msg = clb.message
 
     if poll.total_voter_count <= 0:
         await clb.answer("Видишь голоса? Вот и я невижу")
+    elif poll.total_voter_count >= 2:
+        await clb.answer("Видишь голоса? Они есть, но их мало")
     else:
         if not poll.is_closed:
             await bot.stop_poll(msg.chat.id, msg.message_id)

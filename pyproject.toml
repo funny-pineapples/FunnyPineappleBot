@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "funnypineapplebot"
+version = "1.0.0"
+description = "Бот для телеграм чата @FunnyPineappleChat"
+authors = ["Igor Tolmachov <me@igorek.dev>"]
+license = "GPL-3.0-only"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiogram = "^2.20"
+
+[tool.poetry.dev-dependencies]
+black = "^22.3.0"
+isort = "^5.10.1"
+
+[tool.black]
+line-length = 90
+
+[tool.mypy]
+ignore_missing_imports = true
+disallow_untyped_defs = true
+disallow_untyped_calls = true
+
+[tool.isort]
+profile = "black"
+filter_files = true
+extend_skip = ["__init__.py"]

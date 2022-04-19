@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from random import random
 
-from aiogram import types as t, filters as f
+from aiogram import filters as f
+from aiogram import types as t
 
 from shared import instances as ins
 
@@ -27,4 +28,6 @@ class user:
     def add_member(upd: t.ChatMemberUpdated):
         old = upd.old_chat_member
         new = upd.new_chat_member
-        return not t.ChatMemberStatus.is_chat_member(old.status) and t.ChatMemberStatus.is_chat_member(new.status)
+        return not t.ChatMemberStatus.is_chat_member(
+            old.status
+        ) and t.ChatMemberStatus.is_chat_member(new.status)
