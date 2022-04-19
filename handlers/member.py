@@ -33,6 +33,7 @@ async def запрашиваем_пропуск(upd: t.ChatMemberUpdated):
 )
 async def пропустить(clb: t.CallbackQuery):
     member = await clb.message.chat.get_member(clb.from_user.id)
+
     if not member.is_chat_admin():
         await clb.answer("Ты не админ")
         return
@@ -51,16 +52,15 @@ async def пропустить(clb: t.CallbackQuery):
 )
 async def выкинуть(clb: t.CallbackQuery):
     member = await clb.message.chat.get_member(clb.from_user.id)
-    await clb.message.delete()
-    await clb.message.answer(
-        f'Эта группа для <a href="tg://user?id={clb.from_user.id}">крутых</a>',
-        parse_mode=t.ParseMode.HTML,
-    )
-
-    await sleep(3)
 
     if not member.is_chat_admin():
         await clb.answer("Ты не админ")
         return
     else:
         await clb.message.chat.unban(int(clb.data.split("@")[1]), False)
+
+    await clb.message.delete()
+    await clb.message.answer(
+        f'Эта группа для <a href="tg://user?id={clb.from_user.id}">крутых</a>',
+        parse_mode=t.ParseMode.HTML,
+    )
