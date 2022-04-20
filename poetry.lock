@@ -169,6 +169,14 @@ colors = ["colorama (>=0.4.3,<0.5.0)"]
 plugins = ["setuptools"]
 
 [[package]]
+name = "mc.py"
+version = "3.1.1"
+description = "String generator based on Markov process"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "multidict"
 version = "6.0.2"
 description = "multidict implementation"
@@ -235,7 +243,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "7c3c7f7de5b6df6ab3796df7636aa4eeb7de8f8ca136ec686aaf9cc4ae88cd6c"
+content-hash = "efa0e2c5d3b8f77a22478a52ca869113f970e18c77d8da40a7d020c0eb572a0a"
 
 [metadata.files]
 aiogram = [
@@ -441,6 +449,9 @@ idna = [
 isort = [
     {file = "isort-5.10.1-py3-none-any.whl", hash = "sha256:6f62d78e2f89b4500b080fe3a81690850cd254227f27f75c3a0c491a1f351ba7"},
     {file = "isort-5.10.1.tar.gz", hash = "sha256:e8443a5e7a020e9d7f97f1d7d9cd17c88bcb3bc7e218bf9cf5095fe550be2951"},
+]
+"mc.py" = [
+    {file = "mc.py-3.1.1.tar.gz", hash = "sha256:eaa4436add72c578c1d6dd257c13d6a802ebb8a997f50293176aa46676a2e5dd"},
 ]
 multidict = [
     {file = "multidict-6.0.2-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:0b9e95a740109c6047602f4db4da9949e6c5945cefbad34a1299775ddc9a62e2"},

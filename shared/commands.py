@@ -4,11 +4,9 @@ from aiogram.types import BotCommandScopeAllPrivateChats as private
 
 commands = {
     group(): [
-        cmd("gen", "Высрвть текст"),
-        cmd("del", "Смыть говно"),
-        cmd("pin", "Повесить говно на стенку"),
-        cmd("gif", "Превратить картинку в gif"),
-        cmd("chance", "Установить шанс высирания говна"),
+        cmd("gen", "Покакать текстом"),
+        cmd("del", "Убрать говно"),
+        cmd("pin", "Закрепить говно"),
+        cmd("chance", "Установить шанс покакать в туалет"),
     ],
-    private(): [cmd("gif", "Превратить картинку в gif")],
 }

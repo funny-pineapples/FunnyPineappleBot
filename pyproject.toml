@@ -8,6 +8,7 @@ license = "GPL-3.0-only"
 [tool.poetry.dependencies]
 python = "^3.10"
 aiogram = "^2.20"
+"mc.py" = "3.1.1"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"

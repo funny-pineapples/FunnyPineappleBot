@@ -155,6 +155,8 @@ frozenlist==1.3.0; python_version >= "3.7" \
 idna==3.3; python_version >= "3.7" \
     --hash=sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff \
     --hash=sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d
+mc.py==3.1.1; python_version >= "3.6" \
+    --hash=sha256:eaa4436add72c578c1d6dd257c13d6a802ebb8a997f50293176aa46676a2e5dd
 multidict==6.0.2; python_version >= "3.7" \
     --hash=sha256:0b9e95a740109c6047602f4db4da9949e6c5945cefbad34a1299775ddc9a62e2 \
     --hash=sha256:ac0e27844758d7177989ce406acc6a83c16ed4524ebc363c1f748cba184d89d3 \
