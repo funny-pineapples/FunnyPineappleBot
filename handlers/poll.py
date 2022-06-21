@@ -31,7 +31,7 @@ async def проверить_закреп(clb: t.CallbackQuery):
 
     if poll.total_voter_count <= 0:
         await clb.answer("Видишь голоса? Вот и я невижу")
-    elif poll.total_voter_count >= 2:
+    elif poll.total_voter_count <= 2:
         await clb.answer("Видишь голоса? Они есть, но их мало")
     else:
         if not poll.is_closed:
