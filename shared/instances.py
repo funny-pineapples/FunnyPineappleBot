@@ -4,4 +4,4 @@ from config import token
 
 bot = Bot(token=token)
 dp = Dispatcher(bot)
-gen_chance = 10
+gen_chance = {}

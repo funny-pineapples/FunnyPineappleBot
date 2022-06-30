@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from random import random
+from random import randint
 
 from aiogram import filters as f
 from aiogram import types as t
@@ -15,7 +15,7 @@ class message:
 
     @staticmethod
     def chance(msg: t.Message):
-        return random() <= (ins.gen_chance / 100)
+        return ins.gen_chance.get(msg.chat.id, 10) <= randint(1, 100)
 
     @staticmethod
     def has_text(msg: t.Message):

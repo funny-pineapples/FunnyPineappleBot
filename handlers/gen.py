@@ -30,7 +30,7 @@ async def изменить_шанс_срания(msg: t.Message):
         try:
             chance = int(msg.get_args().split()[0])
             if 0 <= chance <= 100:
-                ins.gen_chance = chance
+                ins.gen_chance[msg.chat.id] = chance
             else:
                 raise RuntimeError()
 
@@ -40,7 +40,7 @@ async def изменить_шанс_срания(msg: t.Message):
                 "Я хз что не так, но я знаю что ты дебил \n    /chance <ЧИСЛО ОТ 0 ДО 100>"
             )
     else:
-        await msg.answer(f"Я сру с шансом в: {ins.gen_chance}%")
+        await msg.answer(f"Я сру с шансом в: {ins.gen_chance.get(msg.chat.id, 10)}%")
 
 
 @dp.message_handler(
