@@ -15,7 +15,7 @@ class message:
 
     @staticmethod
     def chance(msg: t.Message):
-        return ins.gen_chance.get(msg.chat.id, 10) <= randint(1, 100)
+        return ins.gen_chance.get(msg.chat.id, 10) >= randint(1, 100)
 
     @staticmethod
     def has_text(msg: t.Message):
