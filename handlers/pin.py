@@ -21,7 +21,7 @@ async def закрепить_хуету(msg: t.Message):
             reply_markup=t.InlineKeyboardMarkup().add(
                 t.InlineKeyboardButton(
                     "Проверить опрос",
-                    callback_data=f"check_pin_poll:{msg.reply_to_message.id}",
+                    callback_data=f"check_pin_poll:{msg.reply_to_message.message_id}",
                 )
             ),
         )
