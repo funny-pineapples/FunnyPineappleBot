@@ -1,3 +1,5 @@
+import os
+
 import mc
 from aiogram import types as t
 
@@ -22,6 +24,17 @@ async def удалить_хуету(msg: t.Message):
             await msg.answer("Ты умник, можно только свои или мои удалять")
     else:
         await msg.answer("Ты умник, ответь на сообщение")
+
+
+@dp.message_handler(commands=["void"])
+async def лоботомия(msg: t.Message):
+    if msg.get_args() == "Я знаю что делаю":
+        os.remove(f"data/{msg.chat.id}")
+        await msg.answer("Лоботомия проведена успешно")
+    else:
+        await msg.answer(
+            "Напишите <code>/void Я знаю что делаю</code>", parse_mode=t.ParseMode.HTML
+        )
 
 
 @dp.message_handler(commands=["chance"])

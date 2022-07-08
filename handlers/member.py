@@ -3,38 +3,34 @@ from aiogram import types as t
 from shared.instances import bot, dp
 from utils import filters as f
 
-request_queue: list[int] = []
-
 
 @dp.chat_join_request_handler()
 async def приём_запроса(cjr: t.ChatJoinRequest):
-    if cjr.from_user.id not in request_queue:
-        request_queue.append(cjr.from_user.id)
-        r = await bot.send_message(
-            cjr.chat.id,
-            f'<a href="tg://user?id={cjr.from_user.id}">{cjr.from_user.mention}</a> хочет в чат',
-            parse_mode=t.ParseMode.HTML,
-        )
-        await bot.send_poll(
-            cjr.chat.id,
-            "Пускаем ?",
-            [
-                "Да",
-                "Нет",
-            ],
-            False,
-            reply_to_message_id=r.message_id,
-            open_period=600,
-            reply_markup=t.InlineKeyboardMarkup().add(
-                t.InlineKeyboardButton(
-                    "Проверить опрос",
-                    callback_data=f"check_request_poll:{cjr.from_user.id}",
-                )
-            ),
-        )
-        await bot.send_message(
-            cjr.from_user.id, "Заявка на вступление в группу будет вскоре рассмотрена"
-        )
+    r = await bot.send_message(
+        cjr.chat.id,
+        f'<a href="tg://user?id={cjr.from_user.id}">{cjr.from_user.mention}</a> хочет в чат',
+        parse_mode=t.ParseMode.HTML,
+    )
+    await bot.send_poll(
+        cjr.chat.id,
+        "Пускаем ?",
+        [
+            "Да",
+            "Нет",
+        ],
+        False,
+        reply_to_message_id=r.message_id,
+        open_period=600,
+        reply_markup=t.InlineKeyboardMarkup().add(
+            t.InlineKeyboardButton(
+                "Проверить опрос",
+                callback_data=f"check_request_poll:{cjr.from_user.id}",
+            )
+        ),
+    )
+    await bot.send_message(
+        cjr.from_user.id, "Заявка на вступление в группу будет вскоре рассмотрена"
+    )
 
 
 @dp.callback_query_handler(
@@ -52,7 +48,6 @@ async def проверить_запрос(clb: t.CallbackQuery):
         if not poll.is_closed:
             await bot.stop_poll(msg.chat.id, msg.message_id)
 
-        request_queue.remove(user_id)
         yes = poll.options[0].voter_count
         no = poll.options[1].voter_count
         win = max(yes, no)

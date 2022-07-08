@@ -19,17 +19,23 @@ async def закрепить_хуету(msg: t.Message):
             ["Да", "УДАЛИ НАХУЙ", "Нет"],
             close_date=datetime.now() + timedelta(minutes=10),
             reply_markup=t.InlineKeyboardMarkup().add(
-                t.InlineKeyboardButton("Проверить опрос", callback_data="check_pin_poll")
+                t.InlineKeyboardButton(
+                    "Проверить опрос",
+                    callback_data=f"check_pin_poll:{msg.reply_to_message.id}",
+                )
             ),
         )
     else:
         await msg.answer("Ты умник, ответь на сообщение")
 
 
-@dp.callback_query_handler(f.message.is_chat, lambda clb: clb.data == "check_pin_poll")
+@dp.callback_query_handler(
+    f.message.is_chat, lambda clb: clb.data.split(":")[0] == "check_pin_poll"
+)
 async def проверить_закреп(clb: t.CallbackQuery):
     poll = clb.message.poll
     msg = clb.message
+    pin = int(clb.data.split(":")[1])
 
     if poll.total_voter_count < 2:
         await clb.answer(f"Нужно хотябы 2 голоса, сейчас {poll.total_voter_count}")
@@ -42,7 +48,7 @@ async def проверить_закреп(clb: t.CallbackQuery):
         win = max(yes, delete)
 
         if win == yes:
-            await msg.reply_to_message.pin()
+            await msg.chat.pin_message(pin)
         elif win == delete:
-            await msg.reply_to_message.delete()
+            await msg.chat.delete_message(pin)
         await msg.delete()
