@@ -6,12 +6,12 @@ from shared.instances import bot, dp
 from utils import filters as f
 
 
-@dp.message_handler(f.message.is_chat, commands=["gen"])
+@dp.message_handler(commands=["gen"])
 async def сгенерировать_хуету(msg: t.Message):
-    await msg.answer(получить_говно())
+    await msg.answer(получить_говно(msg.chat.id))
 
 
-@dp.message_handler(f.message.is_chat, commands=["del"])
+@dp.message_handler(commands=["del"])
 async def удалить_хуету(msg: t.Message):
     await msg.delete()
 
@@ -43,13 +43,11 @@ async def изменить_шанс_срания(msg: t.Message):
         await msg.answer(f"Я сру с шансом в: {ins.gen_chance.get(msg.chat.id, 10)}%")
 
 
-@dp.message_handler(
-    f.message.chance, f.message.is_chat, content_types=[t.ContentType.ANY]
-)
+@dp.message_handler(f.message.chance, content_types=[t.ContentType.ANY])
 async def срать_сообщение_с_шансом(msg: t.Message):
-    await msg.answer(получить_говно())
+    await msg.answer(получить_говно(msg.chat.id))
 
 
-def получить_говно() -> str:
-    samples = mc.util.load_txt_samples("samples.txt", separator="§")
-    return mc.StringGenerator(samples=samples).generate_string().capitalize()
+def получить_говно(id: int) -> str:
+    samples = mc.util.load_txt_samples(f"data/{id}", separator="§")
+    return mc.StringGenerator(samples=samples).generate_string()

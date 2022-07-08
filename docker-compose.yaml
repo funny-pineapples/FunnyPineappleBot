@@ -5,5 +5,9 @@ services:
     build: "."
     restart: "always"
     volumes:
-        - "./data/samples.txt:/app/samples.txt"
+        - "data:/app/data"
+    env_file:
+      env.env
     
+volumes:
+  data:

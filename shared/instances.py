@@ -1,7 +1,7 @@
 from aiogram import Bot, Dispatcher
 
-from config import token
+from shared.config import token
 
 bot = Bot(token=token)
 dp = Dispatcher(bot)
-gen_chance = {}
+gen_chance: dict[int, int] = {}

@@ -10,8 +10,6 @@ from shared import instances as ins
 
 class message:
     is_chat = f.ChatTypeFilter((t.ChatType.GROUP, t.ChatType.SUPERGROUP))
-    is_private = f.ChatTypeFilter(t.ChatType.PRIVATE)
-    is_reply = f.IsReplyFilter(True)
 
     @staticmethod
     def chance(msg: t.Message):

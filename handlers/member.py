@@ -1,66 +1,69 @@
-from asyncio import sleep
-
 from aiogram import types as t
 
 from shared.instances import bot, dp
 from utils import filters as f
 
-unmute = t.ChatPermissions(*[True] * 8)
-mute = t.ChatPermissions(*[False] * 8)
+request_queue: list[int] = []
 
 
-@dp.chat_member_handler(f.user.add_member)
-async def запрашиваем_пропуск(upd: t.ChatMemberUpdated):
-    pass_user_markup = t.InlineKeyboardMarkup().add(
-        t.InlineKeyboardButton(
-            "Да", callback_data=f"pass_user@{upd.new_chat_member.user.id}"
-        ),
-        t.InlineKeyboardButton(
-            "Нет", callback_data=f"kick_user@{upd.new_chat_member.user.id}"
-        ),
-    )
-    await upd.chat.restrict(upd.new_chat_member.user.id, mute)
-    await bot.send_message(
-        upd.chat.id,
-        f'Это наш <a href="tg://user?id={upd.new_chat_member.user.id}">чел</a> ?',
-        parse_mode=t.ParseMode.HTML,
-        reply_markup=pass_user_markup,
-    )
-
-
-@dp.callback_query_handler(
-    f.message.is_chat, lambda clb: clb.data.split("@")[0] == "pass_user"
-)
-async def пропустить(clb: t.CallbackQuery):
-    member = await clb.message.chat.get_member(clb.from_user.id)
-
-    if not member.is_chat_admin():
-        await clb.answer("Ты не админ")
-        return
-    else:
-        await clb.message.chat.restrict(int(clb.data.split("@")[1]), unmute)
-
-    await clb.message.delete()
-    await clb.message.answer(
-        f'<a href="tg://user?id={int(clb.data.split("@")[1])}">Ананасер</a> добро пожаловать в чат для <a href="tg://user?id={clb.from_user.id}">крутых</a>',
-        parse_mode=t.ParseMode.HTML,
-    )
+@dp.chat_join_request_handler()
+async def приём_запроса(cjr: t.ChatJoinRequest):
+    if cjr.from_user.id not in request_queue:
+        request_queue.append(cjr.from_user.id)
+        r = await bot.send_message(
+            cjr.chat.id,
+            f'<a href="tg://user?id={cjr.from_user.id}">{cjr.from_user.mention}</a> хочет в чат',
+            parse_mode=t.ParseMode.HTML,
+        )
+        await bot.send_poll(
+            cjr.chat.id,
+            "Пускаем ?",
+            [
+                "Да",
+                "Нет",
+            ],
+            False,
+            reply_to_message_id=r.message_id,
+            open_period=600,
+            reply_markup=t.InlineKeyboardMarkup().add(
+                t.InlineKeyboardButton(
+                    "Проверить опрос",
+                    callback_data=f"check_request_poll:{cjr.from_user.id}",
+                )
+            ),
+        )
+        await bot.send_message(
+            cjr.from_user.id, "Заявка на вступление в группу будет вскоре рассмотрена"
+        )
 
 
 @dp.callback_query_handler(
-    f.message.is_chat, lambda clb: clb.data.split("@")[0] == "kick_user"
+    f.message.is_chat, lambda clb: clb.data.split(":")[0] == "check_request_poll"
 )
-async def выкинуть(clb: t.CallbackQuery):
-    member = await clb.message.chat.get_member(clb.from_user.id)
+async def проверить_запрос(clb: t.CallbackQuery):
+    poll = clb.message.poll
+    msg = clb.message
+    data = clb.data.split(":")
+    user_id = int(data[1])
 
-    if not member.is_chat_admin():
-        await clb.answer("Ты не админ")
-        return
+    if poll.total_voter_count < 4:
+        await clb.answer(f"Нужно хотябы 4 голоса, сейчас {poll.total_voter_count}")
     else:
-        await clb.message.chat.unban(int(clb.data.split("@")[1]), False)
+        if not poll.is_closed:
+            await bot.stop_poll(msg.chat.id, msg.message_id)
 
-    await clb.message.delete()
-    await clb.message.answer(
-        f'Эта группа для <a href="tg://user?id={clb.from_user.id}">крутых</a>',
-        parse_mode=t.ParseMode.HTML,
-    )
+        request_queue.remove(user_id)
+        yes = poll.options[0].voter_count
+        no = poll.options[1].voter_count
+        win = max(yes, no)
+
+        if win == yes:
+            await bot.approve_chat_join_request(msg.chat.id, user_id)
+            await bot.send_message(
+                user_id, "Ваша заявка на вступление принята, добро пожаловать в группу"
+            )
+        elif win == no:
+            await bot.decline_chat_join_request(msg.chat.id, user_id)
+            await bot.send_message(user_id, "Ваша заявка на вступление НЕ принята")
+            if not msg.chat.has_protected_content:
+                await msg.forward(user_id)
