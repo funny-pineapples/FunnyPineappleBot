@@ -12,7 +12,6 @@ async def приём_запроса(cjr: t.ChatJoinRequest):
         parse_mode=t.ParseMode.HTML,
     )
     await r.reply_poll(
-        cjr.chat.id,
         "Пускаем ?",
         [
             "Да",
