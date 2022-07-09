@@ -5,7 +5,7 @@ from random import randint
 from aiogram import filters as f
 from aiogram import types as t
 
-from shared import instances as ins
+from shared import config
 
 
 class message:
@@ -13,7 +13,7 @@ class message:
 
     @staticmethod
     def chance(msg: t.Message):
-        return ins.gen_chance.get(msg.chat.id, 10) >= randint(1, 100)
+        return config.chances.get(msg.chat.id, 10) >= randint(1, 100)
 
     @staticmethod
     def has_text(msg: t.Message):

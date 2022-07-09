@@ -4,4 +4,3 @@ from shared.config import token
 
 bot = Bot(token=token)
 dp = Dispatcher(bot)
-gen_chance: dict[int, int] = {}

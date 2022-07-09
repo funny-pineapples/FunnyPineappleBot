@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-
 from aiogram import types as t
 
 from shared.instances import bot, dp
@@ -16,8 +14,11 @@ async def закрепить_хуету(msg: t.Message):
         )
         await r.reply_poll(
             "Закрепить ?",
-            ["Да", "УДАЛИ НАХУЙ", "Нет"],
-            close_date=datetime.now() + timedelta(minutes=10),
+            [
+                "Да",
+                "УДАЛИ НАХУЙ",
+                "Нет",
+            ],
             reply_markup=t.InlineKeyboardMarkup().add(
                 t.InlineKeyboardButton(
                     "Проверить опрос",

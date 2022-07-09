@@ -11,7 +11,7 @@ async def приём_запроса(cjr: t.ChatJoinRequest):
         f'<a href="tg://user?id={cjr.from_user.id}">{cjr.from_user.mention}</a> хочет в чат',
         parse_mode=t.ParseMode.HTML,
     )
-    await bot.send_poll(
+    await r.reply_poll(
         cjr.chat.id,
         "Пускаем ?",
         [
@@ -19,8 +19,6 @@ async def приём_запроса(cjr: t.ChatJoinRequest):
             "Нет",
         ],
         False,
-        reply_to_message_id=r.message_id,
-        open_period=600,
         reply_markup=t.InlineKeyboardMarkup().add(
             t.InlineKeyboardButton(
                 "Проверить опрос",
