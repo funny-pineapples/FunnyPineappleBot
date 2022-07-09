@@ -1,11 +1,15 @@
+import logging
 from copy import deepcopy
 from json import dump, load
 from os import environ as env
 from os import path
 from typing import Any
 
+logging.info("Load configs")
+
 if not path.exists("data/settings.json"):
-    open("data/settings.json", "w").close()
+    with open("data/settings.json", "w") as f:
+        f.write("{}")
 fields: dict[str, Any] = {
     "chances": {},
 }
@@ -21,4 +25,4 @@ def save():
 
 # Configs
 token = env["TOKEN"]
-chances = settings["chances"]
+chances: dict[str, int] = settings["chances"]
