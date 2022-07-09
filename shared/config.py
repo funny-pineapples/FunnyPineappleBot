@@ -4,7 +4,7 @@ from os import environ as env
 from os import path
 from typing import Any
 
-if path.exists("data/settings.json"):
+if not path.exists("data/settings.json"):
     open("data/settings.json", "w").close()
 fields: dict[str, Any] = {
     "chances": {},
