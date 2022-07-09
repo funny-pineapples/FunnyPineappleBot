@@ -1,7 +1,8 @@
 # isort: skip_file
-from . import gen
+from . import msg
+
 from . import pin
 from . import member
+from . import gen
 
-from . import msg
 from . import system
