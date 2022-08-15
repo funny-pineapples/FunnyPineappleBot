@@ -9,7 +9,7 @@ async def сосалка(msg: t.Message):
     if text.startswith("/"):
         return False
     with open(f"data/{msg.chat.id}", "a+") as file:
-        file.write(text.lower().replace("§", "") + "§")
+        file.write(text.replace("§", "") + "§")
     return False
 
 
