@@ -7,17 +7,20 @@ from shared.instances import dp
 
 
 @dp.errors_handler()
-async def уборщик_какашек(upd: t.Update, err: Exception):
-    txt = "Я хз что произошло, но да \n"
-    txt += f"   {err.__class__.__name__}: {' '.join(map(str, err.args))}"
+async def error_handler(upd: t.Update, err: Exception) -> bool:
+    if isinstance(err, AssertionError):
+        text = " ".join(map(str, err.args))
+    else:
+        text = f"{err.__class__.__name__}: {' '.join(map(str, err.args))}"
 
     if upd.message:
-        await upd.message.answer(txt)
+        await upd.message.answer(text)
     elif upd.callback_query:
-        await upd.callback_query.answer(txt)
+        await upd.callback_query.answer(text)
     else:
-        return
+        return False
 
-    logging.error(traceback.format_exc())
+    if not isinstance(err, AssertionError):
+        logging.error(traceback.format_exc())
 
     return True

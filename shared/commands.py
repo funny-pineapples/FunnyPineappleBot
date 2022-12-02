@@ -1,19 +1,24 @@
 from aiogram.types import BotCommand as cmd
+from aiogram.types import BotCommandScopeAllChatAdministrators as admin
 from aiogram.types import BotCommandScopeAllGroupChats as group
 from aiogram.types import BotCommandScopeAllPrivateChats as private
 
 commands = {
     group(): [
-        cmd("gen", "Покакать текстом"),
-        cmd("del", "Убрать говно"),
-        cmd("void", "Лоботомия"),
-        cmd("pin", "Закрепить говно"),
-        cmd("chance", "Установить шанс покакать в туалет"),
+        cmd("gen", "Сгенерировать сообщение"),
+        cmd("del", "Удалить сообщение бота"),
+        cmd("pin", "Создать опрос для закрепления сообщения"),
+    ],
+    admin(): [
+        cmd("gen", "Сгенерировать сообщение"),
+        cmd("del", "Удалить сообщение бота"),
+        cmd("pin", "Создать опрос для закрепления сообщения"),
+        cmd("void", "Отчистить связи для генерации сообщений"),
+        cmd("config", "Открыть настройки чата"),
     ],
     private(): [
-        cmd("gen", "Покакать текстом"),
-        cmd("del", "Убрать говно"),
-        cmd("void", "Лоботомия"),
-        cmd("chance", "Установить шанс покакать в туалет"),
+        cmd("gen", "Сгенерировать сообщение"),
+        cmd("del", "Удалить сообщение бота"),
+        cmd("void", "Отчистить связи для генерации сообщений"),
     ],
 }

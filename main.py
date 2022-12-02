@@ -6,7 +6,7 @@ from aiogram import types as t
 logging.basicConfig(level=logging.INFO)
 
 
-async def on_start(dp: Dispatcher):
+async def on_start(dp: Dispatcher) -> None:
     from shared.commands import commands
 
     for scope, cmd in commands.items():
@@ -18,6 +18,7 @@ if __name__ == "__main__":
     import handlers
     from shared.instances import dp
 
+    dp.middleware.setup(handlers.middleware.MessageMiddleware())
     executor.start_polling(
         dp,
         allowed_updates=t.AllowedUpdates.all(),

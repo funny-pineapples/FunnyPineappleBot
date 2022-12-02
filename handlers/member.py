@@ -1,17 +1,17 @@
 from aiogram import types as t
 
-from shared.instances import bot, dp
+from shared.instances import bot, config, dp
 from utils import filters as f
 
 
 @dp.chat_join_request_handler()
-async def приём_запроса(cjr: t.ChatJoinRequest):
-    r = await bot.send_message(
+async def new_member(cjr: t.ChatJoinRequest) -> None:
+    reply = await bot.send_message(
         cjr.chat.id,
         f'<a href="tg://user?id={cjr.from_user.id}">{cjr.from_user.mention}</a> хочет в чат',
         parse_mode=t.ParseMode.HTML,
     )
-    await r.reply_poll(
+    await reply.reply_poll(
         "Пускаем ?",
         [
             "Да",
@@ -33,28 +33,27 @@ async def приём_запроса(cjr: t.ChatJoinRequest):
 @dp.callback_query_handler(
     f.message.is_chat, lambda clb: clb.data.split(":")[0] == "check_request_poll"
 )
-async def проверить_запрос(clb: t.CallbackQuery):
+async def check_poll(clb: t.CallbackQuery) -> None:
     poll = clb.message.poll
     msg = clb.message
     data = clb.data.split(":")
     user_id = int(data[1])
+    min_answers = config.get_config(msg.chat.id).commands.accept_member_answers_count
 
-    if poll.total_voter_count < 4:
-        await clb.answer(f"Нужно хотябы 4 голоса, сейчас {poll.total_voter_count}")
+    if poll.total_voter_count < min_answers:
+        await clb.answer(
+            f"Нужно хотябы {min_answers} голоса, сейчас {poll.total_voter_count}"
+        )
     else:
         if not poll.is_closed:
             await bot.stop_poll(msg.chat.id, msg.message_id)
 
-        yes = poll.options[0].voter_count
-        no = poll.options[1].voter_count
-        win = max(yes, no)
-
-        if win == yes:
+        if poll.options[0].voter_count > poll.options[1].voter_count:
             await bot.approve_chat_join_request(msg.chat.id, user_id)
             await bot.send_message(
                 user_id, "Ваша заявка на вступление принята, добро пожаловать в группу"
             )
-        elif win == no:
+        else:
             await bot.decline_chat_join_request(msg.chat.id, user_id)
             await bot.send_message(user_id, "Ваша заявка на вступление НЕ принята")
             if not msg.chat.has_protected_content:

@@ -8,25 +8,22 @@ license = "GPL-3.0-only"
 [tool.poetry.dependencies]
 python = "^3.10"
 aiogram = "^2.20"
-"mc.py" = "3.1.1"
+SQLAlchemy = "^2b3"
+"mc.py" = "^4.0.0"
+pydantic = "^1.10.2"
 
-[tool.poetry.dev-dependencies]
-black = "^22.3.0"
+[tool.poetry.group.dev.dependencies]
+mypy = "^0.991"
+black = "^22.10.0"
 isort = "^5.10.1"
-python-lsp-server = "^1.4.1"
-pylsp-mypy = "^0.6.2"
-pyls-isort = "^0.2.2"
-python-lsp-black = "^1.2.1"
 
 [tool.black]
 line-length = 90
 
 [tool.mypy]
 ignore_missing_imports = true
-disallow_untyped_defs = false
-disallow_untyped_calls = false
+disallow_untyped_defs = true
+disallow_untyped_calls = true
 
 [tool.isort]
 profile = "black"
-filter_files = true
-extend_skip = ["__init__.py"]

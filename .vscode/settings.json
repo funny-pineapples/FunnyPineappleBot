@@ -1,6 +1,14 @@
 {
-  "cSpell.words": ["aiogram", "unban", "unmute"],
-  "python.linting.enabled": false,
-  "python.formatting.provider": "black",
-  "python.sortImports.path": "isort"
+  "cSpell.words": [
+    "aiogram",
+    "middlewares",
+    "sessionmaker",
+    "sqlalchemy",
+    "unban",
+    "unmute"
+  ],
+  "files.exclude": {
+    "**/.mypy_cache": true,
+    "**/.venv": true
+  }
 }
