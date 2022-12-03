@@ -10,9 +10,17 @@ class Settings(BaseSettings):
 class GenConfig(BaseModel):
     chance: int = Field(
         10,
-        description="Шанс с которым бот ответит на сообщение",
+        description="Шанс с которым бот сгенерирует сообщение",
         ge=1,
         le=100,
+    )
+    reply: bool = Field(
+        True,
+        description="Включить/Выключить ответ на сообщение",
+    )
+    delete_command: bool = Field(
+        True,
+        description="Включить/Выключить удаление /gen команды",
     )
     min_word_count: int | str | None = Field(
         None,

@@ -39,10 +39,9 @@ def get_text(chat_id: int) -> str:
 
 @dp.message_handler(commands=["gen"])
 async def gen_command(msg: t.Message) -> None:
-    await msg.delete()
-    message = get_text(msg.chat.id)
-    if message is not None:
-        await msg.answer(message)
+    if config.get_config(msg.chat.id).gen.delete_command:
+        await msg.delete()
+    await msg.answer(get_text(msg.chat.id))
 
 
 @dp.message_handler(commands=["del"])
@@ -64,6 +63,7 @@ async def del_command(msg: t.Message) -> None:
     content_types=[t.ContentType.ANY],
 )
 async def chance_message(msg: t.Message) -> None:
-    message = get_text(msg.chat.id)
-    if message is not None:
-        await msg.reply(message)
+    if config.get_config(msg.chat.id).gen.reply:
+        await msg.reply(get_text(msg.chat.id))
+    else:
+        await msg.answer(get_text(msg.chat.id))

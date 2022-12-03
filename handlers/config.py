@@ -1,4 +1,5 @@
 from json import JSONDecodeError, dumps, loads
+from logging import info
 
 from aiogram import types as t
 from pydantic import BaseModel, ValidationError
@@ -42,7 +43,7 @@ async def settings_command(msg: t.Message) -> None:
         text = ""
         for field_name in path:
             assert (
-                isinstance(config, BaseModel) and f in config.__fields__
+                isinstance(config, BaseModel) and field_name in config.__fields__
             ), "Параметр не найден"
             field_info = config.__fields__[field_name].field_info
             config = getattr(config, field_name)
