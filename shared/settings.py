@@ -26,14 +26,14 @@ class GenConfig(BaseModel):
     )
 
 
-class CommandsConfig(BaseModel):
-    pin_answers_count: int = Field(
+class PollConfig(BaseModel):
+    answer_count: int = Field(
         4,
-        description="Минимальное количество голосов для проверки опроса на закрепление сообщения",
+        description="Минимальное количество голосов для проверки опроса",
     )
-    accept_member_answers_count: int = Field(
-        5,
-        description="Минимальное количество голосов для проверки опроса на принятия человека в группу",
+    anonym: bool = Field(
+        False,
+        description="Включить/Выключить анонимный опрос",
     )
 
 
@@ -42,9 +42,13 @@ class Config(BaseModel):
         GenConfig(),
         description="Настройки генерации сообщений",
     )
-    commands: CommandsConfig = Field(
-        CommandsConfig(),
-        description="Настройки команд бота",
+    pin: PollConfig = Field(
+        PollConfig(),
+        description="Настройки закрепления сообщений",
+    )
+    members: PollConfig = Field(
+        PollConfig(),
+        description="Настройки принятия людей в группу",
     )
 
 

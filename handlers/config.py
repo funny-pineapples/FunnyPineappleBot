@@ -1,7 +1,4 @@
-from ast import literal_eval
-from copy import deepcopy
-from logging import info
-from typing import Any, get_args
+from json import JSONDecodeError, dumps, loads
 
 from aiogram import types as t
 from pydantic import BaseModel, ValidationError
@@ -29,49 +26,71 @@ async def void_command(msg: t.Message) -> None:
 async def settings_command(msg: t.Message) -> None:
     def get_fields(config: BaseModel, level: int = 1) -> str:
         text = ""
-        for name in config.__fields__:
-            value = getattr(config, name)
-            if isinstance(value, BaseModel):
-                text += f"\n{' '*level*4}<code>{name}.</code>"
-                text += get_fields(value, level + 1)
+        for field_name in config.__fields__:
+            field = getattr(config, field_name)
+            field_info = config.__fields__[field_name].field_info
+
+            text += "\n" + "  " * level
+            if isinstance(field, BaseModel):
+                text += f"<code>{field_name}.</code> {field_info.description}"
+                text += get_fields(field, level + 1)
             else:
-                text += f"\n{' '*level*4}<code>{name}</code> = {value!r}"
+                text += f"<code>{field_name}</code> = {dumps(field)}"
         return text
 
-    args = msg.get_args().split()
-    chat_config = deepcopy(config.get_config(msg.chat.id))
-    try:
-        if len(args) == 0:
-            text = f"<code>/config</code>{get_fields(chat_config)}\n\n"
-            await msg.reply(text, parse_mode=t.ParseMode.HTML)
+    def get_field(config: BaseModel, path: list[str]) -> str:
+        text = ""
+        for field_name in path:
+            assert (
+                isinstance(config, BaseModel) and f in config.__fields__
+            ), "Параметр не найден"
+            field_info = config.__fields__[field_name].field_info
+            config = getattr(config, field_name)
+
+        text += field_info.description
+        text += "\n\n"
+        if isinstance(config, BaseModel):
+            text += f"<code>/config {'.'.join(path)}.</code>"
+            text += get_fields(config, 1)
         else:
-            conf = chat_config
-            *path, field = args[0].split(".")
-            for f in path:
-                conf = getattr(conf, f)
-                if not isinstance(conf, BaseModel):
-                    raise KeyError()
+            text += f"<code>/config {'.'.join(path)}</code> {dumps(config)}"
+        return text
 
-            if len(args) == 2:
-                if isinstance(getattr(conf, field), BaseModel):
-                    raise KeyError()
-                value = args[1]
-                setattr(conf, field, literal_eval(value))
+    def set_filed(config: BaseModel, path: list[str], value: str) -> str:
+        text = ""
+        field_name = path[-1]
 
-                config.set_config(msg.chat.id, Config.parse_obj(chat_config.dict()))
-                config.save("data/config.json")
+        for f in path[:-1]:
+            assert (
+                isinstance(config, BaseModel) and f in config.__fields__
+            ), "Параметр не найден"
+            config = getattr(config, f)
 
-                await msg.reply(
-                    f"<code>/config {args[0]}</code> = {getattr(conf, field)!r}",
-                    parse_mode=t.ParseMode.HTML,
-                )
-            else:
-                field_info = conf.__fields__[field].field_info
-                await msg.reply(
-                    f"<code>/config {args[0]}</code> = {getattr(conf, field)!r}\n{field_info.description}",
-                    parse_mode=t.ParseMode.HTML,
-                )
-    except (ValidationError, ValueError, SyntaxError):
-        await msg.reply("Неверное значение")
-    except (KeyError, AttributeError):
-        await msg.reply("Параметр не найден")
+        assert not isinstance(
+            getattr(config, field_name), BaseModel
+        ), "Нельзя установить значение для группы параметров"
+
+        setattr(config, field_name, loads(value))
+
+        text += (
+            f"Значение <code>{'.'.join(path)}</code> установлено на <code>{value}</code>"
+        )
+
+        return text
+
+    chat_config = config.get_config(msg.chat.id)
+    args = msg.get_args().split()
+    if len(args) == 0:
+        text = f"<code>/config</code>{get_fields(chat_config)}"
+    elif len(args) == 1:
+        text = get_field(chat_config, args[0].split("."))
+    elif len(args) == 2:
+        try:
+            text = set_filed(chat_config, args[0].split("."), args[1])
+            config.set_config(msg.chat.id, Config.parse_obj(chat_config.dict()))
+            config.save("data/config.json")
+        except (JSONDecodeError, ValidationError):
+            text = "Неверное значение"
+    else:
+        text = "Слишком много аргументов"
+    await msg.answer(text, parse_mode=t.ParseMode.HTML)

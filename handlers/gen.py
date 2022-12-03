@@ -17,7 +17,7 @@ def get_text(chat_id: int) -> str:
 
     assert (
         len(samples) != 0
-    ), "Нету сообщений на основе которых можно сгенерировать сообщение"
+    ), "Нету данных на основе которых можно сгенерировать сообщение"
 
     generator = mc.PhraseGenerator(samples)
     gen_config = config.get_config(chat_id).gen

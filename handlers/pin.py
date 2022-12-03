@@ -18,6 +18,7 @@ async def pin_command(msg: t.Message) -> None:
                 "Да",
                 "Нет",
             ],
+            config.get_config(msg.chat.id).pin.anonym,
             reply_markup=t.InlineKeyboardMarkup().add(
                 t.InlineKeyboardButton(
                     "Проверить опрос",
@@ -26,7 +27,7 @@ async def pin_command(msg: t.Message) -> None:
             ),
         )
     else:
-        await msg.answer("Ты умник, ответь на сообщение")
+        await msg.answer("Вы не ответили на сообщение")
 
 
 @dp.callback_query_handler(
@@ -36,7 +37,7 @@ async def check_poll(clb: t.CallbackQuery) -> None:
     poll = clb.message.poll
     msg = clb.message
     pin = int(clb.data.split(":")[1])
-    min_answers = config.get_config(msg.chat.id).commands.pin_answers_count
+    min_answers = config.get_config(msg.chat.id).pin.answer_count
 
     if poll.total_voter_count < min_answers:
         await clb.answer(

@@ -38,7 +38,7 @@ async def check_poll(clb: t.CallbackQuery) -> None:
     msg = clb.message
     data = clb.data.split(":")
     user_id = int(data[1])
-    min_answers = config.get_config(msg.chat.id).commands.accept_member_answers_count
+    min_answers = config.get_config(msg.chat.id).members.answer_count
 
     if poll.total_voter_count < min_answers:
         await clb.answer(
