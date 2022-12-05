@@ -1,17 +1,22 @@
 from aiogram import types as t
 
-from shared.instances import bot, config, dp
+from shared.instances import bot, chats, dp
 from utils import filters as f
+
+polls: dict[int, int] = {}
 
 
 @dp.chat_join_request_handler()
 async def new_member(cjr: t.ChatJoinRequest) -> None:
+    if cjr.from_user.id in polls:
+        return
+
     reply = await bot.send_message(
         cjr.chat.id,
         f'<a href="tg://user?id={cjr.from_user.id}">{cjr.from_user.mention}</a> хочет в чат',
         parse_mode=t.ParseMode.HTML,
     )
-    await reply.reply_poll(
+    poll = await reply.reply_poll(
         "Пускаем ?",
         [
             "Да",
@@ -28,6 +33,18 @@ async def new_member(cjr: t.ChatJoinRequest) -> None:
     await bot.send_message(
         cjr.from_user.id, "Заявка на вступление в группу будет вскоре рассмотрена"
     )
+    polls[cjr.from_user.id] = poll.message_id
+
+
+@dp.chat_member_handler(f.user.new_user)
+async def admin_accept_member(cmu: t.ChatMemberUpdated) -> None:
+    user_id = cmu.new_chat_member.user.id
+    if user_id in polls:
+        polls.pop(user_id)
+        await bot.send_message(
+            user_id,
+            "Ваша заявка на вступление принята, добро пожаловать в группу",
+        )
 
 
 @dp.callback_query_handler(
@@ -38,7 +55,7 @@ async def check_poll(clb: t.CallbackQuery) -> None:
     msg = clb.message
     data = clb.data.split(":")
     user_id = int(data[1])
-    min_answers = config.get_config(msg.chat.id).members.answer_count
+    min_answers = chats.get(msg.chat.id).members.answer_count
 
     if poll.total_voter_count < min_answers:
         await clb.answer(

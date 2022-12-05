@@ -7,10 +7,10 @@ from sqlalchemy.orm import Session, sessionmaker
 from shared.settings import Chats, Settings
 
 settings = Settings()
-config = Chats()
+chats = Chats("data/config.json")
 if not exists("data/config.json"):
-    config.save("data/config.json")
-config.load("data/config.json")
+    chats.save()
+chats.load()
 
 bot = Bot(token=settings.token)
 dp = Dispatcher(bot)

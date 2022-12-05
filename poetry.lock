@@ -190,14 +190,6 @@ optional = false
 python-versions = ">=3.7,<4.0"
 
 [[package]]
-name = "mc.py"
-version = "4.0.0"
-description = "Python package which provides you a simple way to generate phrases using Markov chains"
-category = "main"
-optional = false
-python-versions = ">=3.9,<4.0"
-
-[[package]]
 name = "multidict"
 version = "6.0.2"
 description = "multidict implementation"
@@ -311,6 +303,17 @@ pymysql = ["pymysql"]
 sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
+name = "tgen"
+version = "0.3.0"
+description = "A pretty simple text generation library"
+category = "main"
+optional = false
+python-versions = ">=3.10,<4.0"
+
+[package.dependencies]
+u-msgpack-python = ">=2.7.2,<3.0.0"
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -327,6 +330,14 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "u-msgpack-python"
+version = "2.7.2"
+description = "A portable, lightweight MessagePack serializer and deserializer written in pure Python."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "yarl"
 version = "1.8.1"
 description = "Yet another URL library"
@@ -341,7 +352,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "4a5eec948c56acc838b2883ca7324b305189367039e1974947768f4ac252db6b"
+content-hash = "a60189eae7993f31bd8274d5f3710cde0e406b80ac5fc7813e0fbf02ea94331e"
 
 [metadata.files]
 aiogram = [
@@ -642,10 +653,6 @@ magic-filter = [
     {file = "magic-filter-1.0.9.tar.gz", hash = "sha256:d0f1ffa5ff1fbe5105fd5f293c79b5d3795f336ea0f6129c636959a687bf422a"},
     {file = "magic_filter-1.0.9-py3-none-any.whl", hash = "sha256:51002312a8972fa514b998b7ff89340c98be3fc499967c1f5f2af98d13baf8d5"},
 ]
-"mc.py" = [
-    {file = "mc.py-4.0.0-py3-none-any.whl", hash = "sha256:aa9a13bf95fc818cc56d1363f3522b050f5ad92715218701992b23217b151417"},
-    {file = "mc.py-4.0.0.tar.gz", hash = "sha256:310f2e9a48ca69b23d4e538a316575380654ff94a14f6e0e38b85928d5d5ea19"},
-]
 multidict = [
     {file = "multidict-6.0.2-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:0b9e95a740109c6047602f4db4da9949e6c5945cefbad34a1299775ddc9a62e2"},
     {file = "multidict-6.0.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:ac0e27844758d7177989ce406acc6a83c16ed4524ebc363c1f748cba184d89d3"},
@@ -836,6 +843,10 @@ SQLAlchemy = [
     {file = "SQLAlchemy-2.0.0b3-py3-none-any.whl", hash = "sha256:5a4dcd4e740cf0e1c38f4053b365a0270690dee60e6061f0eebb1b8d4afcc455"},
     {file = "SQLAlchemy-2.0.0b3.tar.gz", hash = "sha256:8325a4648e639cb2010199f64fad679d2f4ec8ce7e6f424ee1a41b07940cadb6"},
 ]
+tgen = [
+    {file = "tgen-0.3.0-py3-none-any.whl", hash = "sha256:6c145c1f99613cfa345251a5fee9333b648ae2b42af39a7f2d5ddd5449d88e29"},
+    {file = "tgen-0.3.0.tar.gz", hash = "sha256:459d6ef8490d158fdfef90ea429fe44a0baf8b0d61fbd98c2694ddb183a526a8"},
+]
 tomli = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
     {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
@@ -843,6 +854,10 @@ tomli = [
 typing-extensions = [
     {file = "typing_extensions-4.4.0-py3-none-any.whl", hash = "sha256:16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"},
     {file = "typing_extensions-4.4.0.tar.gz", hash = "sha256:1511434bb92bf8dd198c12b1cc812e800d4181cfcb867674e0f8279cc93087aa"},
+]
+u-msgpack-python = [
+    {file = "u-msgpack-python-2.7.2.tar.gz", hash = "sha256:e86f7ac6aa0ef4c6c49f004b4fd435bce99c23e2dd5d73003f3f9816024c2bd8"},
+    {file = "u_msgpack_python-2.7.2-py2.py3-none-any.whl", hash = "sha256:00c77bbb65f8f68c8bd2570e0a14dee84aba429629ea78adc713f94da52ee386"},
 ]
 yarl = [
     {file = "yarl-1.8.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:abc06b97407868ef38f3d172762f4069323de52f2b70d133d096a48d72215d28"},

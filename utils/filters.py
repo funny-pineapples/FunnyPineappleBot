@@ -5,7 +5,7 @@ from random import randint
 from aiogram import filters as f
 from aiogram import types as t
 
-from shared.instances import config
+from shared.instances import chats
 
 
 class message:
@@ -13,7 +13,7 @@ class message:
 
     @staticmethod
     def chance(msg: t.Message) -> bool:
-        return config.get_config(msg.chat.id).gen.chance >= randint(1, 100)
+        return chats.get(msg.chat.id).gen.chance >= randint(1, 100)
 
 
 class user:
@@ -28,3 +28,10 @@ class user:
             )
             return False
         return True
+
+    @staticmethod
+    async def new_user(cmu: t.ChatMemberUpdated) -> bool:
+        return (
+            not cmu.old_chat_member.is_chat_member()
+            and cmu.new_chat_member.is_chat_member()
+        )

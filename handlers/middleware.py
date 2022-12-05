@@ -1,10 +1,9 @@
-from logging import info
-
 from aiogram import types as t
 from aiogram.dispatcher.middlewares import BaseMiddleware
 
 from shared.database import Message
 from shared.instances import session
+from shared.samples import samples
 
 
 class MessageMiddleware(BaseMiddleware):
@@ -16,6 +15,8 @@ class MessageMiddleware(BaseMiddleware):
                     Message(
                         chat_id=msg.chat.id,
                         message_id=msg.message_id,
+                        user_id=msg.from_user.id,
                         message=text,
                     )
                 )
+            samples.get(msg.chat.id).feed(text)

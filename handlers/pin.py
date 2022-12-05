@@ -1,6 +1,6 @@
 from aiogram import types as t
 
-from shared.instances import bot, config, dp
+from shared.instances import bot, chats, dp
 from utils import filters as f
 
 
@@ -18,7 +18,7 @@ async def pin_command(msg: t.Message) -> None:
                 "Да",
                 "Нет",
             ],
-            config.get_config(msg.chat.id).pin.anonym,
+            chats.get(msg.chat.id).pin.anonym,
             reply_markup=t.InlineKeyboardMarkup().add(
                 t.InlineKeyboardButton(
                     "Проверить опрос",
@@ -37,7 +37,7 @@ async def check_poll(clb: t.CallbackQuery) -> None:
     poll = clb.message.poll
     msg = clb.message
     pin = int(clb.data.split(":")[1])
-    min_answers = config.get_config(msg.chat.id).pin.answer_count
+    min_answers = chats.get(msg.chat.id).pin.answer_count
 
     if poll.total_voter_count < min_answers:
         await clb.answer(

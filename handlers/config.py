@@ -1,3 +1,4 @@
+from copy import deepcopy
 from json import JSONDecodeError, dumps, loads
 from logging import info
 
@@ -5,7 +6,8 @@ from aiogram import types as t
 from pydantic import BaseModel, ValidationError
 
 from shared.database import Message
-from shared.instances import config, dp, session
+from shared.instances import chats, dp, session
+from shared.samples import samples
 from shared.settings import Config
 from utils import filters as f
 
@@ -13,9 +15,19 @@ from utils import filters as f
 @dp.message_handler(f.user.is_admin, commands=["void"])
 async def void_command(msg: t.Message) -> None:
     if msg.get_args() == "Я знаю что делаю":
+        samples.delete(msg.chat.id)
         with session.begin() as s:
-            s.query(Message).filter(Message.chat_id == msg.chat.id).delete()
-        await msg.answer("Лоботомия проведена успешно")
+            query = s.query(Message).filter(Message.chat_id == msg.chat.id)
+            if msg.reply_to_message is not None:
+                query = query.filter(Message.user_id == msg.reply_to_message.from_user.id)
+            query.delete()
+        if msg.reply_to_message is not None:
+            await msg.answer(
+                f'Связи пользователя <a href="tg://user?id={msg.reply_to_message.from_user.id}">{msg.reply_to_message.from_user.mention}</a> были очищены',
+                parse_mode=t.ParseMode.HTML,
+            )
+        else:
+            await msg.answer("Связи были очищены")
     else:
         await msg.answer(
             "Напишите <code>/void Я знаю что делаю</code>",
@@ -79,7 +91,7 @@ async def settings_command(msg: t.Message) -> None:
 
         return text
 
-    chat_config = config.get_config(msg.chat.id)
+    chat_config = deepcopy(chats.get(msg.chat.id))
     args = msg.get_args().split()
     if len(args) == 0:
         text = f"<code>/config</code>{get_fields(chat_config)}"
@@ -88,8 +100,7 @@ async def settings_command(msg: t.Message) -> None:
     elif len(args) == 2:
         try:
             text = set_filed(chat_config, args[0].split("."), args[1])
-            config.set_config(msg.chat.id, Config.parse_obj(chat_config.dict()))
-            config.save("data/config.json")
+            chats.set(msg.chat.id, Config.parse_obj(chat_config.dict()))
         except (JSONDecodeError, ValidationError):
             text = "Неверное значение"
     else:

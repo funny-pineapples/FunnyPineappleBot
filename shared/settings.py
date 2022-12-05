@@ -11,7 +11,7 @@ class GenConfig(BaseModel):
     chance: int = Field(
         10,
         description="Шанс с которым бот сгенерирует сообщение",
-        ge=1,
+        ge=0,
         le=100,
     )
     reply: bool = Field(
@@ -21,16 +21,6 @@ class GenConfig(BaseModel):
     delete_command: bool = Field(
         True,
         description="Включить/Выключить удаление /gen команды",
-    )
-    min_word_count: int | str | None = Field(
-        None,
-        description="Минимальное количество слов в сгенерированном предложении",
-        ge=1,
-    )
-    max_word_count: int | None = Field(
-        None,
-        description="Максимальное количество слов в сгенерированном предложении",
-        ge=1,
     )
 
 
@@ -60,22 +50,29 @@ class Config(BaseModel):
     )
 
 
-class Chats(BaseModel):
-    chats: dict[int, Config] = {}
+class Chats:
+    file_name: str
+    configs: dict[int, Config]
 
-    @classmethod
-    def load(cls, file_name: str) -> "Chats":
-        with open(file_name, "r") as file:
-            return cls.parse_obj(load(file))
+    def __init__(self, file_name: str) -> None:
+        self.file_name = file_name
+        self.configs = {}
 
-    def save(self, file_name: str) -> None:
-        with open(file_name, "w") as file:
-            dump(self.schema(), file)
+    def load(self) -> None:
+        with open(self.file_name, "r") as file:
+            self.configs = {
+                id_: Config.parse_obj(config) for id_, config in load(file).items()
+            }
 
-    def get_config(self, chat_id: int) -> Config:
-        if chat_id not in self.chats:
-            self.chats[chat_id] = Config()
-        return self.chats[chat_id]
+    def save(self) -> None:
+        with open(self.file_name, "w") as file:
+            dump({id_: config.dict() for id_, config in self.configs.items()}, file)
 
-    def set_config(self, chat_id: int, config: Config) -> None:
-        self.chats[chat_id] = config
+    def get(self, chat_id: int) -> Config:
+        if chat_id not in self.configs:
+            self.configs[chat_id] = Config()
+        return self.configs[chat_id]
+
+    def set(self, chat_id: int, config: Config) -> None:
+        self.configs[chat_id] = config
+        self.save()
