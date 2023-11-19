@@ -1,4 +1,4 @@
-FROM python:bullseye
+FROM python:3.11-bookworm
 
 RUN apt-get update -y
 RUN apt-get upgrade -y
